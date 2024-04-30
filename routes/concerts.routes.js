@@ -24,8 +24,12 @@ router.route('/concerts/:id').get((req,res) => {
 
 router.route('/concerts').post((req, res) => {
     const {performer, genre, price, day, image } = req.body;
-    db.concerts.push({id: uuidv4(), performer: performer, genre:genre, price: price, day: day, image: image});
-    res.json({messange: 'ok'});
+    if (performer && genre && price && day && image ){
+        db.concerts.push({id: uuidv4(), performer: performer, genre:genre, price: price, day: day, image: image});
+        res.json({messange: 'ok'});
+    } else {
+        res.json({messange: 'Some data is missing'})
+    }
 });
 
 //editById

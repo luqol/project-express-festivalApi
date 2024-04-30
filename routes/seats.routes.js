@@ -24,8 +24,13 @@ router.route('/seats/:id').get((req,res) => {
 
 router.route('/seats').post((req, res) => {
     const {day, seat, client, email } = req.body;
-    db.seats.push({id: uuidv4(), day: day, seat: seat, client: client, email: email});
-    res.json({messange: 'ok'});
+    if ( day && seat && client && email){
+        db.seats.push({id: uuidv4(), day: day, seat: seat, client: client, email: email});
+        res.json({messange: 'ok'});
+    } else {
+        res.json({messange: 'Some data is missing'})
+    }
+    
 });
 
 //editById
@@ -34,7 +39,6 @@ router.route('/seats/:id').put((req, res) => {
     db.seats = db.seats.map( seatSingle => (seatSingle.id === req.params.id ? {...seatSingle, day: day, seat: seat, client: client, email: email} : seatSingle));
     res.json({messange: 'ok'});
 });
-
 //delete
 
 router.route('/seats/:id').delete((req,res) => {

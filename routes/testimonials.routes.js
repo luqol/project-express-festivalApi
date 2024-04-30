@@ -24,8 +24,12 @@ router.route('/testimonials/:id').get((req, res) => {
 
 router.route('/testimonials').post((req, res) => {
     const {author, text} = req.body; 
-    db.testimonials.push({id: uuidv4(), author: author, text: text});
-    res.json({messange: 'ok'});
+    if (author && text){
+        db.testimonials.push({id: uuidv4(), author: author, text: text});
+        res.json({messange: 'ok'});
+    } else {
+        res.json({messange: 'Some data is missing'})
+    }
 });
 
 //editById
