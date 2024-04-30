@@ -24,9 +24,17 @@ router.route('/seats/:id').get((req,res) => {
 
 router.route('/seats').post((req, res) => {
     const {day, seat, client, email } = req.body;
+
     if ( day && seat && client && email){
-        db.seats.push({id: uuidv4(), day: day, seat: seat, client: client, email: email});
+
+        db.seats.map( seatSingle => {
+            if(seatSingle.day === parseInt(day) && seatSingle.seat === parseInt(seat)) {
+                res.json({ message: "The slot is already taken..." });
+            }
+        });
+        db.seats.push({id: uuidv4(), day: parseInt(day), seat: parseInt(seat), client: client, email: email});
         res.json({messange: 'ok'});
+
     } else {
         res.json({messange: 'Some data is missing'})
     }
@@ -36,7 +44,9 @@ router.route('/seats').post((req, res) => {
 //editById
 router.route('/seats/:id').put((req, res) => {
     const {day, seat, client, email} = req.body;
-    db.seats = db.seats.map( seatSingle => (seatSingle.id === req.params.id ? {...seatSingle, day: day, seat: seat, client: client, email: email} : seatSingle));
+    day = parseInt(day);
+    seat = parseInt(seat);
+    db.seats = db.seats.map( seatSingle => (seatSingle.id === req.params.id ? {...seatSingle, day: parseInt(day), seat: parseInt(seat), client: client, email: email} : seatSingle));
     res.json({messange: 'ok'});
 });
 //delete
