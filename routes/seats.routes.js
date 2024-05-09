@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
 const db = require('../db/db');
+const { Socket } = require('socket.io');
 
 //getAll
 
@@ -33,8 +34,8 @@ router.route('/seats').post((req, res) => {
             }
         });
         db.seats.push({id: uuidv4(), day: parseInt(day), seat: parseInt(seat), client: client, email: email});
+        req.io.emit('seatsUpdated', db.seats);
         res.json({messange: 'ok'});
-
     } else {
         res.json({messange: 'Some data is missing'})
     }

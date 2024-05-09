@@ -1,10 +1,16 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const db = require('./db/db');
+const socket = require('socket.io');
 
 
 const app = express();
+
+//init server
+const server = app.listen(process.env.PORT || 8000, () => {
+  console.log('Server is running on port: 8000');
+});
+const io = socket(server);
 
 //imports routes
 const testimonialsRoutes = require('./routes/testimonials.routes');
@@ -15,6 +21,10 @@ const seats = require('./routes/seats.routes');
 app.use(express.static(path.join(__dirname, '/client/build')));
 
 //middleware
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -37,6 +47,13 @@ app.use((req, res) => {
     res.json({messange: 'Not found...'});
   });
 
-app.listen(process.env.PORT || 8000, () => {
-    console.log('Server is running on port: 8000');
+
+
+io.on('connection', (socket) => {
+  console.log('New client! Its id - ' + socket.id);
+
+
+  socket.on('disconnect', () => { 
+    console.log('Oh, socket ' + socket.id + ' has left'); 
+  });
 });
