@@ -33,7 +33,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
       console.log('update');
       return (50 - takenSeats.length);
     });
-  },[chosenDay]);
+  },[chosenDay, seats]);
 
   const isTaken = (seatId) => {
     return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));
