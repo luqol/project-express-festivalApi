@@ -3,6 +3,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "mongodb": "4.17.0",
+    "mongoose": "7.4.3",
     "socket.io": "^4.7.5",
     "uuid": "^9.0.1"
   },
