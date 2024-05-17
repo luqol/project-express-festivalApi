@@ -45,7 +45,8 @@ exports.getById = async (req,res) => {
 exports.edit = async (req, res) => {
     try {
         const {day, seat, client, email} = req.body;
-        const se = await Seat.findById(req.params.id);
+        const id = sanitize(req.params.id);
+        const se = await Seat.findById(id);
         if (se) {
             await Seat.updateOne( { _id: req.params.id}, { $set: { day, seat, client, email }});
             res.json({ message: 'ok'});
