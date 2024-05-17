@@ -1,5 +1,6 @@
 const Seat = require('../models/seat.model');
 const { Socket } = require('socket.io');
+const sanitize = require('mongo-sanitize');
 
 exports.getAll = async (req, res) => {
     try {
@@ -24,8 +25,11 @@ exports.getById = async (req,res) => {
   exports.add = async (req, res) => {
     try {
         const {day, seat, client, email } = req.body;
-        if ( day && seat && client && email){
-            const newSeat = new Seat( {day, seat, client, email});
+        const cEmail = sanitize(email);
+        const cClient = sanitize(client);
+
+        if ( day && seat && cClient && cEmail){
+            const newSeat = new Seat( {day: day, seat: seat, client: cClient, email: cEmail});
             await newSeat.save();
             req.io.emit('seatsUpdated', await Seat.find());
             res.json({ message: 'OK' });

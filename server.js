@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 
 const app = express();
@@ -22,6 +23,8 @@ const seats = require('./routes/seats.routes');
 app.use(express.static(path.join(__dirname, '/client/build')));
 
 //middleware
+app.use(helmet());
+
 app.use((req, res, next) => {
   req.io = io;
   next();
